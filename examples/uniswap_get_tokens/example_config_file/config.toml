@@ -1,0 +1,19 @@
+title = "UniSwap config file"
+
+db_path = "/Users/zuoyangding/Documents/personal/revm/revm/examples/uniswap_get_tokens/sqlite_db/sqlite.db"
+
+[[swap_pools]]
+name = "USDT/WETH"
+address = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852"
+
+[[swap_pools]]
+name = "USDC/USDT"
+address = "0x3041CbD36888bECc7bbCBc0045E3B1f144466f5f"
+
+[[swap_pools]]
+name = "DAI/USDT"
+address = "0xB20bd5D04BE54f870D5C0d3cA85d82b34B836405"
+
+[[swap_pools]]
+name = "WBTC/WETH"
+address = "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940"
