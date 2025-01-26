@@ -1,3 +1,6 @@
+//! Module of SQLs
+
+/// Database initialize
 pub(crate) const CREATE_DB: &str = "
 DROP TABLE IF EXISTS TokenAddrInfoInPool;
 
@@ -14,11 +17,13 @@ CREATE INDEX IF NOT EXISTS idx_token0_addr on TokenAddrInfoInPool (token0_addr);
 CREATE INDEX IF NOT EXISTS idx_token1_addr on TokenAddrInfoInPool (token1_addr);
 ";
 
+/// Store Token Info
 pub(crate) const INSERT_TOKEN_ADDR_INFO_WITH_POOL: &str = "
 INSERT INTO TokenAddrInfoInPool (pool_addr, token0, token1, token0_addr, token1_addr)
 VALUES (?1, ?2, ?3, ?4, ?5);
 ";
 
+/// Query Token Info by Token addreess
 pub(crate) const QUERY_RECORD_BY_TOKEN_ADDR: &str = "
 SELECT pool_addr, token0, token1, token0_addr, token1_addr FROM TokenAddrInfoInPool WHERE token0_addr = ?1 OR token1_addr = ?1;
 ";

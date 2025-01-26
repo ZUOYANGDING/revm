@@ -1,3 +1,4 @@
+//! Module of configuration read and parse
 use clap::Parser;
 use serde_derive::{Deserialize, Serialize};
 use std::{fs, path::PathBuf};
@@ -19,6 +20,7 @@ pub(crate) struct SwapPool {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub(crate) struct UniSwapConfig {
     pub(crate) db_path: PathBuf,
+    pub(crate) port: u16,
     pub(crate) swap_pools: Vec<SwapPool>,
 }
 
@@ -40,14 +42,17 @@ pub(crate) fn load_config(config_path: &str) -> Result<UniSwapConfig, String> {
 mod test {
     use super::load_config;
 
+    // Test the configuration parser
     #[test]
     fn config_parse_test() {
         let mut cur_dir = std::env::current_dir().unwrap();
         cur_dir.push("example_config_file/config.toml");
         match load_config(cur_dir.to_str().unwrap()) {
             Ok(result) => {
+                println!("db path: {:?}", result.db_path);
+                println!("port: {:?}", result.port);
                 for pool in result.swap_pools {
-                    println!("{:?}, {:?}", pool.address, pool.name);
+                    println!("Swap pool: {:?}, {:?}", pool.address, pool.name);
                 }
             }
             Err(e) => {

@@ -1,22 +1,34 @@
+//! Module for Error handling
+
 use std::convert::Infallible;
 use std::fmt::Display;
 use warp::http;
 
+/// Enum of Errors raised by this whole service
 #[derive(Debug)]
 pub(crate) enum ServiceErr {
+    // All Database err
     DatabaseErr,
+    // All Request parameter err
     ReqParamErr,
 }
 impl warp::reject::Reject for ServiceErr {}
 
 #[derive(Debug)]
 pub(crate) enum DatabaseErr {
+    // Err of DB setup
     SetUpDB,
+    // Err of DB connection/ connection pool
     Connection,
+    // Err of SQLite statement preparing
     SQLiteCall,
+    // Err of Data insertion
     InsertData,
+    // Err of Data query
     QueryData,
+    // Err of Data parse from result row
     ExtractFromRow,
+    // Err of DB Transaction
     TransactionStart,
     TransactionSubmit,
 }
@@ -52,6 +64,7 @@ impl Display for DatabaseErr {
     }
 }
 
+/// Error for UniSwap RPC query
 #[derive(Debug)]
 pub(crate) enum RPCQueryErr {
     QueryTokenAddrErr,
@@ -67,7 +80,7 @@ impl Display for RPCQueryErr {
     }
 }
 
-/// Receives a `Rejection` and returns a custom error code to the calling client.
+/// Receives a `Rejection` and returns a custom error message to the calling client.
 pub(crate) async fn handle_rejection(
     err: warp::reject::Rejection,
 ) -> Result<impl warp::Reply, Infallible> {

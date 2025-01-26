@@ -1,7 +1,12 @@
 title = "UniSwap config file"
 
-db_path = "/Users/zuoyangding/Documents/personal/revm/revm/examples/uniswap_get_tokens/sqlite_db/sqlite.db"
+# Absolute path of SQLite DB path
+db_path = "/tmp/sqlite_db/sqlite.db"
 
+# Port number
+port = 8080
+
+# List of the UniSwap Pools including name and its address
 [[swap_pools]]
 name = "USDT/WETH"
 address = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852"

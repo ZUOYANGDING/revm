@@ -1,14 +1,20 @@
+//! Module for SQLite Database Operations
+
+use crate::{config::UniSwapConfig, error::DatabaseErr, service::TokenInfoWithPool, sql};
 use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
 
-use crate::{config::UniSwapConfig, error::DatabaseErr, service::TokenInfoWithPool, sql};
-
+/// Struct store Database connection Pool
 pub(crate) struct Database {
     pool: Pool<SqliteConnectionManager>,
 }
 
 impl Database {
+    /// Init Database, Including
+    /// 1. Database connection pool
+    /// 2. Drop all existing Table (Current logic only need to store data once)
+    /// 3. Create Table and Index on some columns
     pub(crate) fn open(config: UniSwapConfig) -> Result<Self, DatabaseErr> {
         let manager = SqliteConnectionManager::file(config.db_path);
         let pool = r2d2::Pool::new(manager).map_err(|_| DatabaseErr::SetUpDB)?;
@@ -19,12 +25,14 @@ impl Database {
         Ok(Database { pool })
     }
 
+    /// Get connection from connection pool
     pub(crate) fn get_connection(
         &self,
     ) -> Result<PooledConnection<SqliteConnectionManager>, DatabaseErr> {
         self.pool.get().map_err(|_| DatabaseErr::Connection)
     }
 
+    /// Store Queried Token Info of uniswap pool into DB
     pub(crate) fn insert_tokens_info(
         &self,
         tokens_info: &Vec<TokenInfoWithPool>,
@@ -33,9 +41,6 @@ impl Database {
         let transaction = connction
             .transaction()
             .map_err(|_| DatabaseErr::TransactionStart)?;
-
-        // log::info!("token info need to be stored {:?}", tokens_info);
-
         {
             let mut stmt = transaction
                 .prepare(sql::INSERT_TOKEN_ADDR_INFO_WITH_POOL)
@@ -56,6 +61,7 @@ impl Database {
             .map_err(|_| DatabaseErr::TransactionSubmit)
     }
 
+    /// Query Tokens by Token address
     pub(crate) fn get_tokens_info(
         &self,
         addr: &str,
